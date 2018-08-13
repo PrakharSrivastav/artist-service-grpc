@@ -1,0 +1,6 @@
+version: '3'
+services:
+  artist:
+    build: .
+    ports:
+      - '6565:6565'
