@@ -2,5 +2,6 @@ version: '3'
 services:
   artist:
     build: .
+    image: prakharsrivastav/artist:1
     ports:
       - '6565:6565'

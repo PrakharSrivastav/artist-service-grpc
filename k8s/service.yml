@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: artist-service
+spec:
+  type: NodePort
+  selector:
+    app: artist-service
+  ports:
+    - port: 6565
+      targetPort: grpc

@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: artist-service
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: artist-service
+    spec:
+      containers:
+        - name: artist-service
+          image: prakharsrivastav/artist:1
+          ports:
+            - name: grpc
+              containerPort: 6565
