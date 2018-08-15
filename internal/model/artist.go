@@ -6,8 +6,9 @@ import (
 )
 
 type Artist struct {
-	Id   string
-	Name string
+	Id          string `db:"id"`
+	Name        string `db:"name"`
+	Description string `db:"description"`
 }
 
 func NewArtist() *Artist {
@@ -21,6 +22,6 @@ func (a *Artist) ToProto() *pb.Artist {
 	return &pb.Artist{
 		Id:          a.Id,
 		Name:        a.Name,
-		Description: "some desc",
+		Description: a.Description,
 	}
 }

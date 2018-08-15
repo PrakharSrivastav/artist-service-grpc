@@ -1,0 +1,64 @@
+package service
+
+import (
+	"fmt"
+
+	"github.com/PrakharSrivastav/artist-service-grpc/internal/model"
+	"github.com/brianvoe/gofakeit"
+	"github.com/jmoiron/sqlx"
+	_ "github.com/mattn/go-sqlite3"
+)
+
+type repository struct {
+	db *sqlx.DB
+}
+
+func (r *repository) get(id string) (*model.Artist, error) {
+	var artist model.Artist
+	if err := r.db.Get(&artist, "Select * from artists where id = $1", id); err != nil {
+		return nil, err
+	}
+	return &artist, nil
+}
+
+func (r *repository) getAll() ([]*model.Artist, error) {
+	artists := []*model.Artist{}
+	if err := r.db.Select(&artists, "SELECT * FROM artists"); err != nil {
+		return nil, err
+	}
+	return artists, nil
+}
+
+func (r *repository) setupDatabase() error {
+	r.db.MustExec(schema)
+
+	var artists []model.Artist
+	artists = append(artists, model.Artist{Description: gofakeit.Sentence(5), Id: "artist_id_1", Name: gofakeit.Name()})
+	artists = append(artists, model.Artist{Description: gofakeit.Sentence(6), Id: "artist_id_2", Name: gofakeit.Name()})
+	artists = append(artists, model.Artist{Description: gofakeit.Sentence(4), Id: "artist_id_3", Name: gofakeit.Name()})
+	artists = append(artists, model.Artist{Description: gofakeit.Sentence(12), Id: "artist_id_4", Name: gofakeit.Name()})
+	artists = append(artists, model.Artist{Description: gofakeit.Sentence(12), Id: "artist_id_5", Name: gofakeit.Name()})
+	artists = append(artists, model.Artist{Description: gofakeit.Sentence(12), Id: "artist_id_6", Name: gofakeit.Name()})
+	artists = append(artists, model.Artist{Description: gofakeit.Sentence(12), Id: "artist_id_7", Name: gofakeit.Name()})
+	artists = append(artists, model.Artist{Description: gofakeit.Sentence(12), Id: "artist_id_8", Name: gofakeit.Name()})
+	artists = append(artists, model.Artist{Description: gofakeit.Sentence(12), Id: "artist_id_9", Name: gofakeit.Name()})
+	artists = append(artists, model.Artist{Description: gofakeit.Sentence(12), Id: "artist_id_10", Name: gofakeit.Name()})
+	tx := r.db.MustBegin()
+	for _, u := range artists {
+		fmt.Printf("%#v\n", &u)
+		_, err := tx.NamedExec("INSERT into artists (id,name,description) values(:id,:name,:description)", u)
+		if err != nil {
+			return err
+		}
+	}
+	tx.Commit()
+	return nil
+}
+
+var schema = `
+Drop Table if exists artists;
+CREATE TABLE artists (
+    id text,
+    name text,
+    description text
+);`

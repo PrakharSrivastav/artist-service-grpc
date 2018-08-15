@@ -1,6 +1,7 @@
 package rpc
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/PrakharSrivastav/artist-service-grpc/internal/model"
@@ -10,23 +11,26 @@ import (
 	"google.golang.org/grpc"
 )
 
+// ArtistService implements the grpc interfaces
 type ArtistService struct {
 	service service.Service
 }
 
+func (f *ArtistService) Get(_ context.Context, req *pb.SimpleArtistRequest) (*pb.Artist, error) {
+	return f.service.Get(req)
+}
+
+// GetAll fetches all the artists from database
 func (f *ArtistService) GetAll(_ *empty.Empty, stream pb.ArtistService_GetAllServer) error {
 	fmt.Println("Inside the function")
-	var artists []*model.Artist
-	artists = append(artists, model.NewArtist())
-	artists = append(artists, model.NewArtist())
-	artists = append(artists, model.NewArtist())
-	artists = append(artists, model.NewArtist())
-	artists = append(artists, model.NewArtist())
-	artists = append(artists, model.NewArtist())
-	fmt.Println("Added to the list")
+	artists, err := f.service.GetAll()
+	if err != nil {
+		fmt.Println("Error ::", err.Error())
+		return err
+	}
 	for _, a := range artists {
 		fmt.Println("Iterating")
-		if err := stream.Send(a.ToProto()); err != nil {
+		if err := stream.Send(a); err != nil {
 			fmt.Println("Error processing stream :: ", err.Error())
 			return err
 		}
