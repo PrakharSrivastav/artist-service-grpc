@@ -12,11 +12,11 @@ WORKDIR  /go/src/github.com/PrakharSrivastav/artist-service-grpc
 RUN go build -o app
 
 FROM alpine
-RUN mkdir /application
+RUN apk add --update sqlite && mkdir /application
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /go/src/github.com/PrakharSrivastav/artist-service-grpc/app /application
 WORKDIR /application
-USER appuser
+# USER appuser
 EXPOSE 6565
 ENTRYPOINT ["/application/app"]
