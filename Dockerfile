@@ -1,9 +1,12 @@
 FROM golang:alpine as builder
-RUN apk update && apk add git && apk add ca-certificates
-RUN adduser -D -g '' appuser
-RUN mkdir /go/src/github.com
-RUN mkdir /go/src/github.com/PrakharSrivastav
-RUN mkdir /go/src/github.com/PrakharSrivastav/artist-service-grpc
+RUN apk update && apk add --no-cache git \
+	&& apk add --no-cache ca-certificates \
+	&& apk add --update --no-cache sqlite \
+	&& apk add --no-cache build-base \
+	&& adduser -D -g '' appuser \
+	&& mkdir /go/src/github.com \
+	&& mkdir /go/src/github.com/PrakharSrivastav \
+	&& mkdir /go/src/github.com/PrakharSrivastav/artist-service-grpc
 COPY . /go/src/github.com/PrakharSrivastav/artist-service-grpc
 WORKDIR  /go/src/github.com/PrakharSrivastav/artist-service-grpc
 RUN go build -o app
