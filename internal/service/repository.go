@@ -32,11 +32,17 @@ func (r *repository) getAll() ([]*model.Artist, error) {
 // where in ('','','') clause
 func (r *repository) getIn(ids []string) ([]*model.Artist, error) {
 	// {"SELECT * FROM foo WHERE x in (?)",[]interface{}{[]int{1, 2, 3, 4, 5, 6, 7, 8},8}
-	var albums []*model.Artist
-	if err := r.db.Select(&albums, "Select * from artists  where id in (?) ", ids); err != nil {
+	//err := r.db.Select(&albums, "Select * from artists  where id in (?) ", []int{0, 5, 7, 2, 9});
+
+	var artists []*model.Artist
+	query := "Select * from artists  where id in (?) "
+	q, vs, err := sqlx.In(query, ids)
+	err = r.db.Select(&artists, q, vs...)
+	if err != nil {
+		fmt.Println("getIn", err.Error())
 		return nil, err
 	}
-	return albums, nil
+	return artists, nil
 }
 
 func (r *repository) setupDatabase() error {
