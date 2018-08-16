@@ -19,21 +19,19 @@ func main() {
 	checkErr(err)
 
 	// Inject connection to service
-	internalService := service.New(connection)
+	internal := service.New(connection)
 
 	// Initial data migration
-	err = internalService.CleanupAndInit()
-	checkErr(err)
+	checkErr(internal.CleanupAndInit())
 
-	// Inject internal-service to artistService
-	artistService := rpc.New(internalService)
+	// Inject internal service to artistService
+	artistService := rpc.New(internal)
 
 	// Inject artist service to grpc
 	app.GrpcServer.Add(artistService)
 
 	// Start grpc server
-	err = app.GrpcServer.Start()
-	checkErr(err)
+	checkErr(app.GrpcServer.Start())
 }
 
 func checkErr(err error) {

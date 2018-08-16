@@ -13,9 +13,9 @@ type repository struct {
 	db *sqlx.DB
 }
 
-func (r *repository) get(id string) (*model.Artist, error) {
+func (r *repository) get(ID string) (*model.Artist, error) {
 	var artist model.Artist
-	if err := r.db.Get(&artist, "Select * from artists where id = $1", id); err != nil {
+	if err := r.db.Get(&artist, "Select * from artists where id = $1", ID); err != nil {
 		return nil, err
 	}
 	return &artist, nil
@@ -27,6 +27,16 @@ func (r *repository) getAll() ([]*model.Artist, error) {
 		return nil, err
 	}
 	return artists, nil
+}
+
+// where in ('','','') clause
+func (r *repository) getIn(ids []string) ([]*model.Artist, error) {
+	// {"SELECT * FROM foo WHERE x in (?)",[]interface{}{[]int{1, 2, 3, 4, 5, 6, 7, 8},8}
+	var albums []*model.Artist
+	if err := r.db.Select(&albums, "Select * from artists  where id in (?) ", ids); err != nil {
+		return nil, err
+	}
+	return albums, nil
 }
 
 func (r *repository) setupDatabase() error {
