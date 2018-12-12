@@ -10,8 +10,8 @@ type Client struct {
 
 func NewClient() *Client {
 	c := Client{}
-	connArtist := getConnection("album-service-client", "artist-service:6565")
-	connTracks := getConnection("track-service-client", "track-service:6565")
+	connArtist := getConnection("album-service-client", "localhost:6564")//"artist-service:6565")
+	connTracks := getConnection("track-service-client", "localhost:6560")//"track-service:6565")
 	c.albumClientRPC = pb.NewAlbumServiceClient(connArtist)
 	c.trackClientRPC = pb.NewTrackServiceClient(connTracks)
 	return &c

@@ -2,6 +2,8 @@ package backend
 
 import (
 	"fmt"
+	"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
+	"github.com/opentracing/opentracing-go"
 	"net"
 
 	"google.golang.org/grpc"
@@ -23,9 +25,13 @@ type Handler interface {
 }
 
 // NewGrpcServer creates a new server
-func NewGrpcServer() *Server {
+func NewGrpcServer(tracer opentracing.Tracer) *Server {
 	s := Server{}
 	s.Health = health.NewServer()
+	s.options = append(s.options,grpc.UnaryInterceptor(otgrpc.OpenTracingServerInterceptor(tracer, otgrpc.LogPayloads())))
+	s.options = append(s.options,grpc.StreamInterceptor(otgrpc.OpenTracingStreamServerInterceptor(tracer, otgrpc.LogPayloads())))
+
+
 	s.Server = grpc.NewServer(s.options...)
 	grpc_health_v1.RegisterHealthServer(s.Server, s.Health)
 
