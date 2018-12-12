@@ -27,7 +27,7 @@ func main() {
 	checkErr(err)
 
 	// Inject connection to service
-	internal := service.New(connection)
+	internal := service.New(connection,tracer)
 
 	// Initial data migration
 	checkErr(internal.CleanupAndInit())

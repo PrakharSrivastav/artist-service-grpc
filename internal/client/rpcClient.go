@@ -2,6 +2,8 @@ package client
 
 import (
 	"fmt"
+	"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
+	"github.com/opentracing/opentracing-go"
 
 	"google.golang.org/grpc"
 )
@@ -14,9 +16,13 @@ type GrpcClient struct {
 }
 
 // New creates a new GrpcClient
-func New(name string, def string) *GrpcClient {
+func New(name string, def string, tracer opentracing.Tracer) *GrpcClient {
 	options := []grpc.DialOption{}
 	options = append(options, grpc.WithInsecure())
+
+	// Add tracing info
+	options = append(options, grpc.WithUnaryInterceptor(otgrpc.OpenTracingClientInterceptor(tracer, otgrpc.LogPayloads())))
+	options = append(options, grpc.WithStreamInterceptor(otgrpc.OpenTracingStreamClientInterceptor(tracer, otgrpc.LogPayloads())))
 	client := GrpcClient{
 		name:    name,
 		addr:    def,

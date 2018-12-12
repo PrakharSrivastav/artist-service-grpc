@@ -2,6 +2,7 @@ package service
 
 import (
 	pb "github.com/PrakharSrivastav/gql-grpc-defintions/go/schema"
+	"github.com/opentracing/opentracing-go"
 
 	"github.com/PrakharSrivastav/artist-service-grpc/internal/client"
 	"github.com/jmoiron/sqlx"
@@ -12,10 +13,10 @@ type serviceImpl struct {
 	client *client.Client
 }
 
-func New(db *sqlx.DB) Service {
+func New(db *sqlx.DB, tracer opentracing.Tracer) Service {
 	return &serviceImpl{
 		repo:   &repository{db: db},
-		client: client.NewClient(),
+		client: client.NewClient(tracer),
 	}
 }
 
