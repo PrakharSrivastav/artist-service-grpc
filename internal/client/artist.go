@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"fmt"
 
 	pb "github.com/PrakharSrivastav/gql-grpc-defintions/go/schema"
 )
@@ -13,5 +14,6 @@ func (c *Client) GetAlbum(albumID string) (*pb.Album, error) {
 
 // GetTrack gets the track details by Id
 func (c *Client) GetTrack(trackID string) (*pb.Track, error) {
+	fmt.Println("Client code")
 	return c.trackClientRPC.Get(context.Background(), &pb.SimpleTrackRequest{Id: trackID})
 }

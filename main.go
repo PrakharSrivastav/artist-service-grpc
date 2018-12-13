@@ -60,7 +60,7 @@ const (
 	zipkinHTTPEndpoint = "http://localhost:9411/api/v1/spans"
 
 	// Debug mode.
-	debug = true
+	debug = false
 
 	// same span can be set to true for RPC style spans (Zipkin V1) vs Node style (OpenTracing)
 	sameSpan = false

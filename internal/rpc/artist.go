@@ -22,9 +22,11 @@ type ArtistService struct {
 func (f *ArtistService) Get(ctx context.Context, req *pb.SimpleArtistRequest) (*pb.Artist, error) {
 	span := opentracing.SpanFromContext(ctx)
 	span.LogFields(
-		log.String("service", "artist-service-get"),
+		log.String("service", "gRPC-artist-get"),
 		log.Int64("now", time.Now().Unix()),
 	)
+	span.LogKV("service", "gRPC-artist-get", "now", time.Now().Unix())
+	defer span.Finish()
 	return f.service.Get(req)
 }
 
@@ -33,9 +35,10 @@ func (f *ArtistService) GetAll(_ *empty.Empty, stream pb.ArtistService_GetAllSer
 	ctx := stream.Context()
 	span := opentracing.SpanFromContext(ctx)
 	span.LogFields(
-		log.String("service", "artist-service-getAll"),
+		log.String("service", "gRPC-artist-getAll"),
 		log.Int64("now", time.Now().Unix()),
 	)
+	defer span.Finish()
 	artists, err := f.service.GetAll()
 	if err != nil {
 		fmt.Println("Error ::", err.Error())
@@ -56,9 +59,10 @@ func (f *ArtistService) GetArtistByAlbum(req *pb.SimpleArtistRequest, stream pb.
 	ctx := stream.Context()
 	span := opentracing.SpanFromContext(ctx)
 	span.LogFields(
-		log.String("service", "artist-service-get-artist-by-album"),
+		log.String("service", "gRPC-artist-get-by-album"),
 		log.Int64("now", time.Now().Unix()),
 	)
+	defer span.Finish()
 	artists, err := f.service.GetArtistByAlbum(req.GetId())
 	if err != nil {
 		return err
@@ -75,11 +79,15 @@ func (f *ArtistService) GetArtistByAlbum(req *pb.SimpleArtistRequest, stream pb.
 // GetArtistByTrack fetches all the artists for a track
 func (f *ArtistService) GetArtistByTrack(req *pb.SimpleArtistRequest, stream pb.ArtistService_GetArtistByTrackServer) error {
 	ctx := stream.Context()
+
 	span := opentracing.SpanFromContext(ctx)
 	span.LogFields(
-		log.String("service", "artist-service-get-artist-by-track"),
+		log.String("service", "gRPC-artist-get-by-track"),
 		log.Int64("now", time.Now().Unix()),
 	)
+	span.LogKV("service", "gRPC-artist-get-by-track", "now", time.Now().Unix())
+	defer span.Finish()
+
 	artists, err := f.service.GetArtistByTrack(req.GetId())
 	if err != nil {
 		return err

@@ -1,11 +1,11 @@
 package service
 
 import (
-	pb "github.com/PrakharSrivastav/gql-grpc-defintions/go/schema"
-	"github.com/opentracing/opentracing-go"
-
+	"fmt"
 	"github.com/PrakharSrivastav/artist-service-grpc/internal/client"
+	pb "github.com/PrakharSrivastav/gql-grpc-defintions/go/schema"
 	"github.com/jmoiron/sqlx"
+	"github.com/opentracing/opentracing-go"
 )
 
 type serviceImpl struct {
@@ -68,6 +68,7 @@ func (f *serviceImpl) GetArtistByAlbum(albumID string) ([]*pb.Artist, error) {
 func (f *serviceImpl) GetArtistByTrack(trackId string) ([]*pb.Artist, error) {
 	// Get the artists for a track
 	var ids []string
+	fmt.Println("Getting Artist by track")
 	if track, err := f.client.GetTrack(trackId); err != nil {
 		return nil, err
 	} else {

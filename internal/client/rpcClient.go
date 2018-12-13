@@ -23,6 +23,8 @@ func New(name string, def string, tracer opentracing.Tracer) *GrpcClient {
 	// Add tracing info
 	options = append(options, grpc.WithUnaryInterceptor(otgrpc.OpenTracingClientInterceptor(tracer, otgrpc.LogPayloads())))
 	options = append(options, grpc.WithStreamInterceptor(otgrpc.OpenTracingStreamClientInterceptor(tracer, otgrpc.LogPayloads())))
+
+
 	client := GrpcClient{
 		name:    name,
 		addr:    def,
