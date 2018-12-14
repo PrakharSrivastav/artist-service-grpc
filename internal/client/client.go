@@ -13,14 +13,14 @@ type Client struct {
 
 func NewClient(tracer opentracing.Tracer) *Client {
 	c := Client{}
-	connArtist := getConnection("album-service-client", "localhost:6564" ,tracer)//"artist-service:6565")
-	connTracks := getConnection("track-service-client", "localhost:6560", tracer)//"track-service:6565")
+	connArtist := getConnection("album-service-client", "album-service:6565", tracer)
+	connTracks := getConnection("track-service-client", "track-service:6565", tracer)
 	c.albumClientRPC = pb.NewAlbumServiceClient(connArtist)
 	c.trackClientRPC = pb.NewTrackServiceClient(connTracks)
 	return &c
 }
 
-func getConnection(name string, addr string , tracer opentracing.Tracer) *grpc.ClientConn {
-	connection := New(name, addr , tracer)
+func getConnection(name string, addr string, tracer opentracing.Tracer) *grpc.ClientConn {
+	connection := New(name, addr, tracer)
 	return connection.Dial()
 }

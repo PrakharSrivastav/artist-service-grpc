@@ -2,9 +2,9 @@ version: '3'
 services:
   artist-service:
     build: .
-    image: prakharsrivastav/artist:2
-    ports:
-      - '6564:6565'
+    image: prakharsrivastav/artist:3
+#    ports:
+#      - '6565:6565'
 
 networks:
   default:

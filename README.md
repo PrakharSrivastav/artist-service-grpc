@@ -48,3 +48,5 @@ Please follow the below instructions for development and deployment.
 - change docker image tag in `k8s/deployment.yml`
 - run `kubectl apply -f k8s/` from root of project to deploy to kubernetes.
 
+## Added support for traceability
+- Added support for gRPC tracing (client|server)

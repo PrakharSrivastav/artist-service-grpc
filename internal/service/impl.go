@@ -1,7 +1,7 @@
 package service
 
 import (
-	"fmt"
+	"context"
 	"github.com/PrakharSrivastav/artist-service-grpc/internal/client"
 	pb "github.com/PrakharSrivastav/gql-grpc-defintions/go/schema"
 	"github.com/jmoiron/sqlx"
@@ -42,11 +42,11 @@ func (f *serviceImpl) GetAll() ([]*pb.Artist, error) {
 	return protoArtists, nil
 }
 
-func (f *serviceImpl) GetArtistByAlbum(albumID string) ([]*pb.Artist, error) {
+func (f *serviceImpl) GetArtistByAlbum(ctx context.Context,albumID string) ([]*pb.Artist, error) {
 
 	// get all the artists in the album (grpc)
 	var artistIds []string
-	if album, err := f.client.GetAlbum(albumID); err != nil {
+	if album, err := f.client.GetAlbum(ctx, albumID); err != nil {
 		return nil, err
 	} else {
 		artistIds = append(artistIds, album.GetArtistId())
@@ -65,11 +65,11 @@ func (f *serviceImpl) GetArtistByAlbum(albumID string) ([]*pb.Artist, error) {
 	return protoArtists, nil
 }
 
-func (f *serviceImpl) GetArtistByTrack(trackId string) ([]*pb.Artist, error) {
+func (f *serviceImpl) GetArtistByTrack(ctx context.Context, trackId string) ([]*pb.Artist, error) {
 	// Get the artists for a track
 	var ids []string
-	fmt.Println("Getting Artist by track")
-	if track, err := f.client.GetTrack(trackId); err != nil {
+
+	if track, err := f.client.GetTrack(ctx,trackId); err != nil {
 		return nil, err
 	} else {
 		ids = append(ids, track.GetArtistId())

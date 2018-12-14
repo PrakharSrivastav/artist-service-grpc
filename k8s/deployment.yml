@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: artist-service
-          image: prakharsrivastav/artist:2
+          image: prakharsrivastav/artist:3
           ports:
             - name: grpc
               containerPort: 6565

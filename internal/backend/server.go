@@ -28,7 +28,7 @@ type Handler interface {
 func NewGrpcServer(tracer opentracing.Tracer) *Server {
 	s := Server{}
 	s.Health = health.NewServer()
-
+	opentracing.InitGlobalTracer(tracer)
 	// Add interceptors for instrumentation
 	s.options = append(s.options,grpc.UnaryInterceptor(otgrpc.OpenTracingServerInterceptor(tracer, otgrpc.LogPayloads())))
 	s.options = append(s.options,grpc.StreamInterceptor(otgrpc.OpenTracingStreamServerInterceptor(tracer, otgrpc.LogPayloads())))
